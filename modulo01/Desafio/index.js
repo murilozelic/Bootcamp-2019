@@ -5,15 +5,16 @@ const server = express();
 server.use(express.json());
 
 const projects = [];
-let count = 0;
+let contagemRequisicoes = 0;
 
 // Crie um middleware global chamado em todas requisições que imprime (console.log) 
 // uma contagem de quantas requisições foram feitas na aplicação até então;
 server.use((req, res, next) => {
 
-  console.log(`Método ${req.method}; Contagem: ${count += 1}`);
+  console.log(`Método ${req.method}; Contagem: ${contagemRequisicoes += 1}`);
 
-  next();
+  return next();
+
 })
 
 // Crie um middleware que será utilizado em todas rotas que recebem o ID do projeto
@@ -36,8 +37,7 @@ function checkProjectId(req, res, next) {
 // Certifique-se de enviar tanto o ID quanto o título do projeto no formato string 
 // com àspas duplas.
 server.post('/projects', (req, res) => {
-  const { id } = req.body;
-  const { title } = req.body;
+  const { id, title } = req.body;
   const tasks = [];
 
   projects[id] = { id, title, tasks };
