@@ -2,7 +2,7 @@ import express from 'express';
 import routes from './routes';
 
 class App {
-  // Método chamada sempre que a classe é instanciada
+  // Método chamado sempre que a classe é instanciada
   constructor() {
     this.server = express();
 
