@@ -1,0 +1,9 @@
+Lista de comandos LINUX para facilitar utilização e programação:
+  
+  Limpar terminal: Ctrl + L
+  
+  Update do package: 
+    sudo apt-get update
+    sudo apt-get upgrade
+    sudo apt-get autoremove // Remove downloads no cache
+    sudo apt-get autoclean  // Remove downloads no cache
