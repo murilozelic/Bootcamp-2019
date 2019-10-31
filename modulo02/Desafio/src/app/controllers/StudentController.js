@@ -20,10 +20,9 @@ class StudentController {
         .required(),
     });
 
-    if (!(await schema.isValid(req.body))) {
-      return res.status(400).json({ error: 'Validation fails' });
-    }
-    // ver como utilizar callback e catch para especificar os erros do schema
+    schema.validate(req.body).catch(err => {
+      return res.status(400).json({ msg: `Error : ${err.errors}` });
+    });
 
     const studentExists = await Student.findOne({
       where: { email: req.body.email },
@@ -36,6 +35,82 @@ class StudentController {
     const { name } = await Student.create(req.body);
 
     return res.json({ message: `Student ${name} created succesfully` });
+  }
+
+  async update(req, res) {
+    const schema = Yup.object().shape({
+      email: Yup.string()
+        .email()
+        .required(),
+      age: Yup.number()
+        .integer()
+        .moreThan(16), // idade minima para fazer academia!
+      weight: Yup.number().positive(),
+      height: Yup.number().positive(),
+    });
+
+    schema.validate(req.body).catch(err => {
+      return res.status(400).json({ msg: `Error : ${err.errors}` });
+    });
+
+    const student = await Student.findOne({
+      where: { email: req.body.email },
+    });
+
+    // const { name, email } = student;
+
+    if (!student) {
+      return res.status(400).json({ error: 'Student does not exists.' });
+    }
+
+    // const { age, weight, height } = await student.update(req.body);
+    try {
+      const updatedStudent = await student.update(req.body);
+      return res.json(updatedStudent);
+    } catch (err) {
+      return res.json({ error: 'Error updating user.', err });
+    }
+  }
+
+  async index(req, res) {
+    const students = await Student.findAll({
+      attributes: { exclude: ['id', 'createdAt', 'updatedAt'] },
+    });
+
+    if (students.length === 0) {
+      return res.json({ status: 'There are no users registered' });
+    }
+
+    return res.json(students);
+  }
+
+  async delete(req, res) {
+    const schema = Yup.object().shape({
+      email: Yup.string()
+        .email()
+        .required(),
+    });
+
+    schema.validate(req.body).catch(err => {
+      return res.status(400).json({ msg: `Error : ${err.errors}` });
+    });
+
+    const student = await Student.findOne({
+      where: { email: req.body.email },
+    });
+
+    // const { name, email } = student;
+
+    if (!student) {
+      return res.status(200).json({ error: 'Student does not exists.' });
+    }
+
+    try {
+      await student.destroy();
+      return res.json({ status: `Student ${student.email} deleted` });
+    } catch (err) {
+      return res.json({ error: 'Error deleting user.', err });
+    }
   }
 }
 

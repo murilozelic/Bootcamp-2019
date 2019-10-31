@@ -7,26 +7,14 @@ class Student extends Model {
         name: Sequelize.STRING,
         email: Sequelize.STRING,
         age: Sequelize.INTEGER,
-        weight: Sequelize.DECIMAL(10, 2),
-        height: Sequelize.DECIMAL(10, 2),
+        weight: Sequelize.INTEGER,
+        height: Sequelize.INTEGER,
       },
       {
         sequelize,
       }
     );
     return this;
-  }
-
-  updateAge(newAge) {
-    this.age = newAge;
-  }
-
-  updateHeight(newHeight) {
-    this.height = newHeight;
-  }
-
-  updateWeight(newWeight) {
-    this.weight = newWeight;
   }
 }
 
